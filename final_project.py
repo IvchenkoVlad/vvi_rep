@@ -232,48 +232,48 @@ class Interpreter(NodeVisitor):
         tree = self.parser.parse()
         return self.visit(tree)
 
-    def validateAndParse(text):
+def validateAndParse(text):
 
-        if (text[len(text) - 1] != ';'):
-            print("semicolon ';' missing ")
+    if (text[len(text) - 1] != ';'):
+        print("semicolon ';' missing ")
+        exit()
+    listOfVariables = list()
+    listOfValues = list()
+
+    stmts = text.split(';')
+    stmtsCount = len(stmts) - 1
+    if (stmtsCount == 0):
+        print('incorrect syntax')
+        exit()
+
+    for x in range(0, stmtsCount):
+        assignment = stmts[x].split()
+
+        if (assignment.pop(1) == '='):
+            listOfVariables.append(assignment.pop(0))
+
+            for k in range(0, len(assignment)):
+                match = re.search(r'^[a-z]+', assignment[k])
+                if match:
+                    i = listOfVariables.index(assignment[k]) if assignment[k] in listOfVariables else None
+
+                    if i is None:
+                        print('The variable -> ', assignment[k], ' <- was not defined. ')
+                        exit()
+                    else:
+                        assignment[k] = listOfValues[i]
+
+            text = ' '.join(str(x) for x in assignment)
+            lexer = Lexer(text)
+            parser = Parser(lexer)
+            interpreter = Interpreter(parser)
+            result = interpreter.interpret()
+            listOfValues.append(result)
+        else:
+            print("Assignment '=' was not defined")
             exit()
-        listOfVariables = list()
-        listOfValues = list()
 
-        stmts = text.split(';')
-        stmtsCount = len(stmts) - 1
-        if (stmtsCount == 0):
-            print('incorrect syntax')
-            exit()
-
-        for x in range(0, stmtsCount):
-            assignment = stmts[x].split()
-
-            if (assignment.pop(1) == '='):
-                listOfVariables.append(assignment.pop(0))
-
-                for k in range(0, len(assignment)):
-                    match = re.search(r'^[a-z]+', assignment[k])
-                    if match:
-                        i = listOfVariables.index(assignment[k]) if assignment[k] in listOfVariables else None
-
-                        if i is None:
-                            print('The variable -> ', assignment[k], ' <- was not defined. ')
-                            exit()
-                        else:
-                            assignment[k] = listOfValues[i]
-
-                text = ' '.join(str(x) for x in assignment)
-                lexer = Lexer(text)
-                parser = Parser(lexer)
-                interpreter = Interpreter(parser)
-                result = interpreter.interpret()
-                listOfValues.append(result)
-            else:
-                print("Assignment '=' was not defined")
-                exit()
-
-        return listOfVariables, listOfValues
+    return listOfVariables, listOfValues
 
 
 def main():
@@ -286,7 +286,7 @@ def main():
         # uncomment the bottom line to type in program though the keyboard
         # programInput = input('Enter the program. Separate symbols with spaces: ')
 
-        listOfVariables, listOfValues = Interpreter.validateAndParse(programInput)
+        listOfVariables, listOfValues = validateAndParse(programInput)
         for x in range(0, len(listOfVariables)):
             print(listOfVariables[x], " = ", listOfValues[x])
     except:
