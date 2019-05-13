@@ -281,7 +281,7 @@ def main():
         # separate all symbols with space.
         # to test with different values change the programInput variable
 
-        programInput = 'x_2 = (4 - 2) * 3; y = 5 / x_2 - 4 * ( x_2 - 10 ); m = y * 10; k = 7; d = ( 7 - y ) * ( x_2 + m );'
+        programInput = 'x_2 = (4 - 2) * 3; y = 5 / x_2 - 4 * ( x_2 - 10 ); m = y * 10; k = 7; d = ( k - x ) * 3 - y;'
 
         # uncomment the bottom line to type in program though the keyboard
         # programInput = input('Enter the program. Separate symbols with spaces: ')
